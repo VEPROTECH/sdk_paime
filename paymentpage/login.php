@@ -1,13 +1,22 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+﻿<?php
+include 'Tools/fonction.php';
+$jsonip = file_get_contents('http://getcitydetails.geobytes.com/GetCityDetails?fqcn='.get_user_ip());
+$dataip = json_decode($jsonip);
+?>
+<!DOCTYPE html>
+<html lang="fr">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Système de paiement en ligne au Bénin">
+    <meta name="author" content="Verbeck DEGBESSE">
+    <meta name="keywords" content="paiement, en ligne, Bénin, payez, gandokintché">
 
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="css/style.css">
     <!-- Website Font style -->
     <link rel="stylesheet" href="css/font-awesome.min.css">
-
+    <link rel="icon" href="images/fvicon.png" type="image/x-icon" />
     <!-- Google Fonts -->
     <link href='https://fonts.googleapis.com/css?family=Passion+One' rel='stylesheet' type='text/css'>
     <link href='https://fonts.googleapis.com/css?family=Oxygen' rel='stylesheet' type='text/css'>
@@ -146,19 +155,22 @@
     <div class="container">
         <div class="pull-left">
             <p style="color: #16213e" class="copyright">
-                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                Gandokintché Copyright &copy;<script>document.write(new Date().getFullYear());</script>
 
-                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+                Gandokintché Copyright &copy; <script>document.write(new Date().getFullYear());</script>
+
+                                    <span>
+                                        <img style="max-width: 20px;margin-left: 10px;" src="https://api.hostip.info/images/flags/<?php echo strtolower($dataip->geobytesinternet); ?>.gif">
+                                        <?php echo $dataip->geobytescountry; ?>
+                                    </span>
             </p>
         </div>
         <div class="pull-right">
             <ul>
-                <li><a href="#">Termes & Conditions d'utilisation</a></li>
-                <li><a target="_blank" href="http://www.dashboard.gandokintche.com/balance">Mon Compte</a></li>
-                <li><a target="_blank" href="http://www.gandokintche.com/tarif">Tarifs</a></li>
-                <li><a target="_blank" href="http://www.gandokintche.com/developpeur">Développeurs</a></li>
-                <li><a href="#">Nous contactez</a></li>
+<!--                <li><a href="#">Termes & Conditions d'utilisation</a></li>-->
+                <li><a target="_blank" href="https://dashboard.gandokintche.com/balance">Mon Compte</a></li>
+                <li><a target="_blank" href="https://www.gandokintche.com/tarif">Tarifs</a></li>
+                <li><a target="_blank" href="https://www.gandokintche.com/developpeur">Développeurs</a></li>
+                <li><a href="https://www.gandokintche.com/#contact">Nous contactez</a></li>
             </ul>
         </div>
     </div>

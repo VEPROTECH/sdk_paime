@@ -7,6 +7,9 @@ if(!isset($_COOKIE["user_iccode"]) )
 {
     header("location: login?transaction=".$_GET["transaction"]."&token=".$_GET["token"]);
 }
+
+$jsonip = file_get_contents('http://getcitydetails.geobytes.com/GetCityDetails?fqcn='.get_user_ip());
+$dataip = json_decode($jsonip);
 ?>
 
 <!DOCTYPE html>
@@ -14,6 +17,9 @@ if(!isset($_COOKIE["user_iccode"]) )
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
+    <meta name="description" content="Système de paiement en ligne au Bénin">
+    <meta name="author" content="Verbeck DEGBESSE">
+    <meta name="keywords" content="paiement, en ligne, Bénin, payez, gandokintché">
 
     <link rel="icon" sizes="192x192" href="images/fvicon.png"/>
     <link rel="stylesheet" type="text/css" href="css/style.css">
@@ -26,14 +32,14 @@ if(!isset($_COOKIE["user_iccode"]) )
     <!-- Main CSS-->
     <link href="css/theme.css" rel="stylesheet" media="all">
     <link href="css/style.css" rel="stylesheet" media="all">
-    <link href="css/swiper.css" rel="stylesheet">
+    <link href="css/alertb.css" rel="stylesheet">
 
     <title>Gandokintché | Payment</title>
 </head>
 
 
-
-<body data-spy="scroll" data-target="#bs-example-navbar-collapse-1" data-offset="120" style="background-color: #e5e5e5">
+<!--background-color: #e5e5e5-->
+<body data-spy="scroll" data-target="#bs-example-navbar-collapse-1" data-offset="120" style="">
 <header class="main_header_area" >
     <div class="main_menu_area">
         <div style="max-width:1200px" class="container">
@@ -56,19 +62,19 @@ if(!isset($_COOKIE["user_iccode"]) )
                     <ul class="nav navbar-nav pull-right">
 
                         <li class="<?php if($title == "Support") echo "active" ?>">
-                            <a target="_blank" href="http://www.gandokintche.com/support" class="lip" style="color: #0d1c3f;font-weight: 700;">FAQ & SUPPORTS</a></li>
+                            <a target="_blank" href="https://www.gandokintche.com/support" class="lip" style="color: #0d1c3f;font-weight: 700;">FAQ & SUPPORTS</a></li>
 
-                        <li class="nav-item ">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <img style="max-width: 20px;" src="images/france.png">
-                            </a>
-                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item"  href="#"><img style="max-width: 30px;" src="images/engl.png"> <span style="margin-left:10px">English</span></a>
-                            </div>
-                        </li>
+<!--                        <li class="nav-item ">-->
+<!--                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+<!--                                <img style="max-width: 20px;" src="images/france.png">-->
+<!--                            </a>-->
+<!--                            <div class="dropdown-menu" aria-labelledby="navbarDropdown">-->
+<!--                                <a class="dropdown-item"  href="#"><img style="max-width: 30px;" src="images/engl.png"> <span style="margin-left:10px">English</span></a>-->
+<!--                            </div>-->
+<!--                        </li>-->
 
                         <li class="<?php if($title == "Accédez à votre compte") echo "active" ?>">
-                            <a target="_blank"  href="http://dashboard.gandokintche.com/login?return=true" class="lip" style="color: #0d1c3f;font-weight: 700;">
+                            <a target="_blank"  href="https://dashboard.gandokintche.com/login?return=true" class="lip" style="color: #0d1c3f;font-weight: 700;">
                                 Accédez à votre compte <span>
                                     <i class="fa fa-arrow-right"></i> </span></a>
                         </li>
@@ -243,7 +249,13 @@ if(!isset($_COOKIE["user_iccode"]) )
                 background-color: #fff;
             }
 
+        }
 
+        @media (max-width: 991px) {
+            .ov{
+                margin-top: 20px;
+            }
+        }
     </style>
 
 
@@ -266,7 +278,7 @@ if(!isset($_COOKIE["user_iccode"]) )
                         <span> <i class="fa fa-arrow-circle-left"></i> </span>Retour sur le site du marchand
                     </button>
                 </div>
-                <div style="text-align: right;" class="col-md-6">
+                <div style="text-align: right;" class="ov col-md-6">
                     <button id="payer" style="height: 50px;background-image: -webkit-linear-gradient(0deg, #fbad16 0%, #fbaa18 100%);" class="ouvrir btn submint_btn form-control">
                         Payer
                     </button>
@@ -280,9 +292,8 @@ if(!isset($_COOKIE["user_iccode"]) )
                             <table class="table table-borderless table-data3">
                                 <thead>
                                 <tr>
-                                    <th>Produit</th>
-                                    <th>Quantité</th>
-                                    <th>Prix Unitaire</th>
+                                    <th>Description</th>
+                                    <th>Montant</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -292,19 +303,17 @@ if(!isset($_COOKIE["user_iccode"]) )
 
                                 ?>
                                 <tr>
-                                    <td>
+                                    <td style="line-height: 2em;">
                                         <?php
-                                            echo $a->libelle;
+                                            echo "<strong>". $a->libelle."</strong><br>";
+                                            echo "Quantité : ". $a->quantity;
                                         ?>
+
                                     </td>
+
                                     <td>
                                         <?php
-                                        echo $a->quantity;
-                                        ?>
-                                    </td>
-                                    <td>
-                                        <?php
-                                        echo formatMoney($a->prix)." CFA";
+                                        echo formatMoney($a->prix*$a->quantity)." CFA";
                                         ?>
                                     </td>
 
@@ -369,6 +378,7 @@ if(!isset($_COOKIE["user_iccode"]) )
 
 <!-- Main JS-->
 <script src="js/main.js"></script>
+    <script src="js/alertb.js"></script>
 <script src="js/swiper.min.js"></script>
 </section>
 </body>
@@ -378,20 +388,20 @@ if(!isset($_COOKIE["user_iccode"]) )
 <div style="background: transparent; color: white" class="footer_copy_right">
     <div class="container">
         <div class="pull-left">
-            <p style="color: #16213e" class="copyright">
-                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
-                Gandokintché Copyright &copy;<script>document.write(new Date().getFullYear());</script>
-
-                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->
+            <p style="color: #16213e;padding: 0" class="copyright">
+                Gandokintché Copyright &copy; <script>document.write(new Date().getFullYear());</script>
+                <span>
+                    <img style="max-width: 20px;margin-left: 10px;" src="https://api.hostip.info/images/flags/<?php echo strtolower($dataip->geobytesinternet); ?>.gif">
+                    <?php echo $dataip->geobytescountry; ?>
+                </span>
             </p>
         </div>
         <div class="pull-right">
             <ul>
-                <li><a href="#">Termes & Conditions d'utilisation</a></li>
-                <li><a target="_blank" href="http://www.dashboard.gandokintche.com/balance">Mon Compte</a></li>
-                <li><a target="_blank" href="http://www.gandokintche.com/tarif">Tarifs</a></li>
-                <li><a target="_blank" href="http://www.gandokintche.com/developpeur">Développeurs</a></li>
-                <li><a href="#">Nous contactez</a></li>
+                <li><a target="_blank" href="https://dashboard.gandokintche.com/balance">Mon Compte</a></li>
+                <li><a target="_blank" href="https://www.gandokintche.com/tarif">Tarifs</a></li>
+                <li><a target="_blank" href="https://www.gandokintche.com/developpeur">Développeurs</a></li>
+                <li><a href="https://www.gandokintche.com/#contact">Nous contactez</a></li>
             </ul>
         </div>
     </div>
@@ -444,30 +454,6 @@ if(!isset($_COOKIE["user_iccode"]) )
     </div>
 </div>
 
-<!--<div style="color: #fff" class="modal fade"  tabindex="-1" role="dialog" aria-labelledby="modal-notification" aria-hidden="true">-->
-<!--    <div class="modal-dialog modal-danger modal-dialog-centered modal- modal-lg" role="document">-->
-<!--        <div class="modal-content bg-gradient-blue">-->
-<!--            <div class="modal-header">-->
-<!--                <h3 style="color: #fff" class="modal-title" id="modal-title-notification">-->
-<!--                    <img style="max-width: 250px" src="images/logof.png">-->
-<!--                </h3>-->
-<!---->
-<!--            </div>-->
-<!--            <div style="color: #fff" class="modal-body">-->
-<!--                <div class="py-3 text-center">-->
-<!--                    <i style="font-size: 16em" class="fa fa-info-circle"></i>-->
-<!--                    <h4 style="color: #fff" class="heading mt-4">Problème lors du paiement !</h4>-->
-<!--                    <p id="failed"></p>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div style="color: #fff" class="modal-footer">-->
-<!--                <a style="color: #fff" type="button" class="btn btn-white">Retour sur le site marchand</a>-->
-<!--                <button style="color: #fff" type="button" class="btn btn-link text-white ml-auto" data-dismiss="modal">Fermer</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-
 <div class="modal fade" id="loader" tabindex="-1" role="dialog"
      aria-labelledby="staticModalLabel" data-backdrop="static" aria-hidden="true">
     <div class="modal-dialog modal-sm" role="document">
@@ -514,8 +500,28 @@ if(!isset($_COOKIE["user_iccode"]) )
                         if(data.hasOwnProperty("error"))
                         {
                             $("#loader").modal('hide');
-                            $('#failed').html(data.error);
-                            $('#msgerror').modal('show');
+                            // $('#failed').html(data.error);
+
+                            $.confirm({
+                                columnClass: 'col-md-6 col-md-offset-3',
+                                title: 'Problème de paiement',
+                                content: data.error,
+                                type: 'red',
+                                typeAnimated: true,
+                                buttons: {
+                                    tryAgain: {
+                                        text: 'OK',
+                                        btnClass: 'btn-red',
+                                        action: function(){
+                                        }
+                                    },
+                                    close: function () {
+
+                                    }
+                                }
+                            });
+
+                            // $('#msgerror').modal('show');
 
                         }else{
                             if(data.hasOwnProperty("msg"))
@@ -524,8 +530,28 @@ if(!isset($_COOKIE["user_iccode"]) )
                                 $('#msgsuccess').modal('show');
                             }else{
                             $("#loader").modal('hide');
-                            $('#failed').html("Erreur interne du serveur. Veuillez réessayer !");
-                            $('#msgerror').modal('show');
+
+                                $.confirm({
+                                    columnClass: 'col-md-6 col-md-offset-3',
+                                    title: 'Problème de paiement',
+                                    content: 'Erreur interne du serveur. Veuillez réessayer !',
+                                    type: 'red',
+                                    typeAnimated: true,
+                                    buttons: {
+                                        tryAgain: {
+                                            text: 'OK',
+                                            btnClass: 'btn-red',
+                                            action: function(){
+                                            }
+                                        },
+                                        close: function () {
+
+                                        }
+                                    }
+                                });
+
+                            // $('#failed').html("");
+                            // $('#msgerror').modal('show');
                            }
                         }
                     },5000);

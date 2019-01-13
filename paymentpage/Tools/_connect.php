@@ -1,6 +1,5 @@
 ﻿<?php
 include 'database.php';
-include 'fonction.php';
 if(isset($_POST["valider"]))
 {
     if( !empty($_POST["email"]) && !empty($_POST["password"]) )
